@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="ST_MBusConnection" Id="{7f225316-ada6-4561-ab19-63132a696cfe}">
+    <Declaration><![CDATA[TYPE ST_MBusConnection :
+STRUCT
+    sIPAddr       	: STRING(15);
+    nTCPPort      	: UINT := MODBUS_TCP_PORT;
+    nUnitID       	: BYTE := 16#FF;
+	tTimeout      	: TIME := T#5S;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
