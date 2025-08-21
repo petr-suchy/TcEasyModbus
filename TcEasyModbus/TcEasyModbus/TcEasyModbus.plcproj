@@ -16,6 +16,12 @@
     <Implicit_KindOfTask>{2e51d8d9-f818-4c36-b4c8-0f42a708326f}</Implicit_KindOfTask>
     <Implicit_Jitter_Distribution>{09b71cb5-b017-427a-b32f-9e0dd9da8ad4}</Implicit_Jitter_Distribution>
     <LibraryReferences>{7e6db57a-4a00-4855-af9e-3d179f0dc367}</LibraryReferences>
+    <Company>https://github.com/petr-suchy</Company>
+    <Released>false</Released>
+    <Title>Easy Modbus Library</Title>
+    <ProjectVersion>0.1.0.0</ProjectVersion>
+    <DefaultNamespace>TcMBus</DefaultNamespace>
+    <Author>Petr Suchý</Author>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DUTs\ST_MBusConnection.TcDUT">
@@ -45,10 +51,14 @@
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Version\Global_Version.TcGVL">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
+    <Folder Include="Version" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>
@@ -68,6 +78,11 @@
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Module</Namespace>
     </PlaceholderReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TcEasyModbus.tmc">
+      <SubType>Content</SubType>
+    </None>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
