@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_MBusFunc" Id="{60195107-8524-4881-a136-2025fa2e7ced}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT FB_MBusFunc
+VAR_INPUT
+	stMBusConnection	: REFERENCE TO ST_MBusConnection;
+	bEnable				: BOOL;
+END_VAR
+VAR_OUTPUT
+	bStatusOk			: BOOL;
+    bBusy				: BOOL;
+    bError				: BOOL;
+    nErrId				: UDINT;
+END_VAR
+VAR
+	fbRunRTrig			: R_TRIG;
+	fbResetFTrig		: F_TRIG;
+	eReadState			: (WAIT, TRIGGER, CALLING, ERROR);
+	stMBusStatus		: ST_MBusStatus;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbRunRTrig(CLK := bEnable);
+fbResetFTrig(CLK := bEnable);
+
+IF eReadState = WAIT AND fbRunRTrig.Q THEN
+	bBusy := TRUE;
+	eReadState := TRIGGER;
+END_IF
+
+IF fbResetFTrig.Q THEN
+	bStatusOk := FALSE;
+	bError := FALSE;
+	nErrId := 0;
+	ClearFBOutput();
+	IF eReadState = ERROR THEN
+		eReadState := WAIT;
+	END_IF
+END_IF
+
+CASE eReadState OF
+	WAIT:
+		// Do nothing
+	TRIGGER:
+		ReadFBInput();
+		TriggerMBFunc();
+		eReadState := CALLING;
+		
+	CALLING:
+		IF NOT stMBusStatus.bBusy AND NOT stMBusStatus.bError THEN
+			IF bEnable THEN
+				bStatusOk := TRUE;
+				WriteFBOutput();
+				eReadState := TRIGGER;
+			ELSE
+				bBusy := FALSE;
+				eReadState := WAIT;
+			END_IF
+		END_IF
+		IF stMBusStatus.bError THEN
+			bBusy := FALSE;
+			IF bEnable THEN
+				bStatusOk := FALSE;
+				bError := TRUE;
+				nErrId := stMBusStatus.nErrId;
+				eReadState := ERROR;
+			ELSE
+				eReadState := WAIT;
+			END_IF
+		END_IF
+		CallMBFunc();
+		
+	ERROR:
+		// Do nothing
+END_CASE
+]]></ST>
+    </Implementation>
+    <Method Name="CallMBFunc" Id="{95100eab-0a3f-40b3-ba92-0658dc112e1b}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT CallMBFunc
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearFBOutput" Id="{8a510a92-b916-406d-9bf6-a0d2704ecd92}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT ClearFBOutput
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadFBInput" Id="{fb718a78-dbc2-4c0b-a9c4-8b9c3e1ae6a8}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT ReadFBInput
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TriggerMBFunc" Id="{e323de06-b5b8-41c2-a258-3ea619dfdbdf}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT TriggerMBFunc
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WriteFBOutput" Id="{84c67e93-777f-47f0-bfe9-28ae00321ba3}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT WriteFBOutput
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
