@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_MBusReadInputRegs" Id="{17e9d00e-d975-48c3-884f-07cc9bbf41b1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MBusReadInputRegs EXTENDS FB_MBusFunc
+VAR_INPUT
+	nNumOfInputRegs		: WORD;
+	nStartAddr			: WORD;
+END_VAR
+VAR_OUTPUT
+	nInputReg0			: INT;
+	nInputReg1			: INT;
+	nInputReg2			: INT;
+	nInputReg3			: INT;
+	nInputReg4			: INT;
+	nInputReg5			: INT;
+	nInputReg6			: INT;
+	nInputReg7			: INT;
+END_VAR
+VAR
+	fbMBReadInputRegs	: FB_MBReadInputRegs;
+	aReadBuffer			: ARRAY[0..7] OF INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SUPER^();]]></ST>
+    </Implementation>
+    <Method Name="CallMBFunc" Id="{5bc94b6c-7b40-4655-8c73-0ac7d72ad3c6}">
+      <Declaration><![CDATA[METHOD PROTECTED  CallMBFunc
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMBReadInputRegs(
+	bExecute := FALSE,
+	bBusy=> stMBusStatus.bBusy, 
+	bError=> stMBusStatus.bError, 
+	nErrId=> stMBusStatus.nErrId
+);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearFBOutput" Id="{1ff09b27-c820-4f70-9620-612b7aa4b4df}">
+      <Declaration><![CDATA[METHOD PROTECTED  ClearFBOutput
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[nInputReg0 := 0;
+nInputReg1 := 0;
+nInputReg2 := 0;
+nInputReg3 := 0;
+nInputReg4 := 0;
+nInputReg5 := 0;
+nInputReg6 := 0;
+nInputReg7 := 0;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadFBInput" Id="{71417c77-e6f6-4959-b077-0c4b6cb097c9}">
+      <Declaration><![CDATA[METHOD PROTECTED  ReadFBInput
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Do nothing]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TriggerMBFunc" Id="{3f48e448-409d-4cbf-ac29-5b6d6a73026a}">
+      <Declaration><![CDATA[METHOD PROTECTED  TriggerMBFunc
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMBReadInputRegs(
+	sIPAddr:= stMBUSConnection.sIPAddr, 
+	nTCPPort:= stMBUSConnection.nTCPPort, 
+	nUnitID:= stMBUSConnection.nUnitID, 
+	nQuantity:= nNumOfInputRegs, 
+	nMBAddr:= nStartAddr, 
+	cbLength:= SIZEOF(aReadBuffer), 
+	pDestAddr:= ADR(aReadBuffer), 
+	bExecute:= TRUE, 
+	tTimeout:= stMBUSConnection.tTimeout, 
+	bBusy=> stMBusStatus.bBusy, 
+	bError=> stMBusStatus.bError, 
+	nErrId=> stMBusStatus.nErrId, 
+	cbRead=> );]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WriteFBOutput" Id="{3dc3f4d6-4a6f-4494-bd2d-3778babc5004}">
+      <Declaration><![CDATA[METHOD PROTECTED  WriteFBOutput
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[nInputReg0 := aReadBuffer[0];
+nInputReg1 := aReadBuffer[1];
+nInputReg2 := aReadBuffer[2];
+nInputReg3 := aReadBuffer[3];
+nInputReg4 := aReadBuffer[4];
+nInputReg5 := aReadBuffer[5];
+nInputReg6 := aReadBuffer[6];
+nInputReg7 := aReadBuffer[7];]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
