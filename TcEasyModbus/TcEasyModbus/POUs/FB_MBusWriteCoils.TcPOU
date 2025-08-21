@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_MBusWriteCoils" Id="{3167bdc2-61f9-4d64-a3dc-f441a86e3410}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MBusWriteCoils EXTENDS FB_MBusFunc
+VAR_INPUT
+	nNumOfCoils		: WORD;
+	nStartAddr		: WORD;
+	bCoil0			: BOOL;
+	bCoil1			: BOOL;
+	bCoil2			: BOOL;
+	bCoil3			: BOOL;
+	bCoil4			: BOOL;
+	bCoil5			: BOOL;
+	bCoil6			: BOOL;
+	bCoil7			: BOOL;
+	bCoil8			: BOOL;
+	bCoil9			: BOOL;
+	bCoil10			: BOOL;
+	bCoil11			: BOOL;
+	bCoil12			: BOOL;
+	bCoil13			: BOOL;
+	bCoil14			: BOOL;
+	bCoil15			: BOOL;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	fbMBWriteCoils	: FB_MBWriteCoils;
+	aWriteBuffer	: ARRAY[0..1] OF BYTE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SUPER^();
+]]></ST>
+    </Implementation>
+    <Method Name="CallMBFunc" Id="{7f4f3a0e-6426-4d15-8c00-559006a8ca06}">
+      <Declaration><![CDATA[METHOD PROTECTED  CallMBFunc
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMBWriteCoils(
+	bExecute := FALSE,
+	bBusy=> stMBusStatus.bBusy, 
+	bError=> stMBusStatus.bError, 
+	nErrId=> stMBusStatus.nErrId
+);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearFBOutput" Id="{b20634bd-3f9f-40fe-b360-69d685712b4e}">
+      <Declaration><![CDATA[METHOD PROTECTED  ClearFBOutput
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Do noting
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadFBInput" Id="{4befff4c-a9ce-466a-b085-adf50d832fb5}">
+      <Declaration><![CDATA[METHOD PROTECTED  ReadFBInput
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[aWriteBuffer[0].0 := bCoil0;
+aWriteBuffer[0].1 := bCoil1;
+aWriteBuffer[0].2 := bCoil2;
+aWriteBuffer[0].3 := bCoil3;
+aWriteBuffer[0].4 := bCoil4;
+aWriteBuffer[0].5 := bCoil5;
+aWriteBuffer[0].6 := bCoil6;
+aWriteBuffer[0].7 := bCoil7;
+
+aWriteBuffer[1].0 := bCoil8;
+aWriteBuffer[1].1 := bCoil9;
+aWriteBuffer[1].2 := bCoil10;
+aWriteBuffer[1].3 := bCoil11;
+aWriteBuffer[1].4 := bCoil12;
+aWriteBuffer[1].5 := bCoil13;
+aWriteBuffer[1].6 := bCoil14;
+aWriteBuffer[1].7 := bCoil15;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TriggerMBFunc" Id="{1eda860f-83b9-4ab0-aac7-e7a5ccfb26ae}">
+      <Declaration><![CDATA[METHOD PROTECTED  TriggerMBFunc
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMBWriteCoils(
+	sIPAddr:= stMBUSConnection.sIPAddr, 
+	nTCPPort:= stMBUSConnection.nTCPPort, 
+	nUnitID:= stMBUSConnection.nUnitID, 
+	nQuantity:= nNumOfCoils, 
+	nMBAddr:= nStartAddr, 
+	cbLength:= SIZEOF(aWriteBuffer), 
+	pSrcAddr:= ADR(aWriteBuffer), 
+	bExecute:= TRUE, 
+	tTimeout:= stMBUSConnection.tTimeout, 
+	bBusy=> stMBusStatus.bBusy, 
+	bError=> stMBusStatus.bError, 
+	nErrId=> stMBusStatus.nErrId);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WriteFBOutput" Id="{21938baf-3537-4d07-8394-711d9d0121c5}">
+      <Declaration><![CDATA[METHOD PROTECTED  WriteFBOutput
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Do nothing
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
