@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_MBusWriteHoldingRegs" Id="{b094f424-65d1-494b-9646-0f8af07aa311}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MBusWriteHoldingRegs EXTENDS FB_MBusFunc
+VAR_INPUT
+	nNumOfHoldingRegs	: WORD;
+	nStartAddr			: WORD;
+	nHoldingReg0		: INT;
+	nHoldingReg1		: INT;
+	nHoldingReg2		: INT;
+	nHoldingReg3		: INT;
+	nHoldingReg4		: INT;
+	nHoldingReg5		: INT;
+	nHoldingReg6		: INT;
+	nHoldingReg7		: INT;	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	fbMBWriteRegs	: FB_MBWriteRegs;
+	aWriteBuffer	: ARRAY[0..7] OF INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SUPER^();
+]]></ST>
+    </Implementation>
+    <Method Name="CallMBFunc" Id="{1a4de26b-2a87-4860-9ece-c1a55df88d6e}">
+      <Declaration><![CDATA[METHOD PROTECTED  CallMBFunc
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMBWriteRegs(
+	bExecute := FALSE,
+	bBusy=> stMBusStatus.bBusy, 
+	bError=> stMBusStatus.bError, 
+	nErrId=> stMBusStatus.nErrId
+);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearFBOutput" Id="{7a41c6a5-5b31-461f-ac68-93a26e633d66}">
+      <Declaration><![CDATA[METHOD PROTECTED  ClearFBOutput
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Do noting]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadFBInput" Id="{e6114814-9646-4d78-91d0-9e01886c1820}">
+      <Declaration><![CDATA[METHOD PROTECTED  ReadFBInput
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[aWriteBuffer[0] := nHoldingReg0;
+aWriteBuffer[1] := nHoldingReg1;
+aWriteBuffer[2] := nHoldingReg2;
+aWriteBuffer[3] := nHoldingReg3;
+aWriteBuffer[4] := nHoldingReg4;
+aWriteBuffer[5] := nHoldingReg5;
+aWriteBuffer[6] := nHoldingReg6;
+aWriteBuffer[7] := nHoldingReg7;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TriggerMBFunc" Id="{83ae0832-b868-4c25-a444-3851511fb906}">
+      <Declaration><![CDATA[METHOD PROTECTED  TriggerMBFunc
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMBWriteRegs(
+	sIPAddr:= stMBUSConnection.sIPAddr, 
+	nTCPPort:= stMBUSConnection.nTCPPort, 
+	nUnitID:= stMBUSConnection.nUnitID, 
+	nQuantity:= nNumOfHoldingRegs, 
+	nMBAddr:= nStartAddr, 
+	cbLength:= SIZEOF(aWriteBuffer), 
+	pSrcAddr:= ADR(aWriteBuffer), 
+	bExecute:= TRUE, 
+	tTimeout:= stMBUSConnection.tTimeout, 
+	bBusy=> stMBusStatus.bBusy, 
+	bError=> stMBusStatus.bError, 
+	nErrId=> stMBusStatus.nErrId);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WriteFBOutput" Id="{4550ab2b-4072-4666-9408-b433a7245609}">
+      <Declaration><![CDATA[METHOD PROTECTED  WriteFBOutput
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Do nothing]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

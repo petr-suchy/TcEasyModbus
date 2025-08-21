@@ -39,6 +39,9 @@
     <Compile Include="POUs\FB_MBusWriteCoils.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FB_MBusWriteHoldingRegs.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
